@@ -41,7 +41,7 @@ export function SearchPage() {
     try {
       return previewSearchArgv(form);
     } catch {
-      return previewSearchArgv({ ...defaultSearchForm(), mode: form.mode });
+      return [form.mode, "--format", "json", "--", "<query>"];
     }
   }, [form]);
 
