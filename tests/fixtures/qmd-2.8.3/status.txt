@@ -1,0 +1,28 @@
+QMD Status
+
+Index: /tmp/qmd-fixture/index.sqlite
+Size:  64 KB
+
+Documents
+  Total:    1 files indexed
+  Vectors:  0 embedded
+  Pending:  1 need embedding (run 'qmd embed')
+  Updated:  1m ago
+
+AST Chunking
+  Status:   active
+  Languages: markdown
+
+Collections
+  demo (qmd://demo/)
+    Pattern:  **/*.md
+    Files:    1 (updated 1m ago)
+    Contexts: 1
+      /: Fixture collection context
+
+Tips
+  Run 'qmd embed' to generate embeddings for hybrid search.
+
+Models
+  Embedding:   https://huggingface.co/ggml-org/embeddinggemma-300M-GGUF
+  Reranking:   https://huggingface.co/ggml-org/Qwen3-Reranker-0.6B-Q8_0-GGUF

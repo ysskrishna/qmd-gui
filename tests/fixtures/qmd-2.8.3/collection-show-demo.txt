@@ -1,0 +1,5 @@
+Collection: demo
+  Path:     /tmp/qmd-fixture/notes
+  Pattern:  **/*.md
+  Include:  yes (default)
+  Contexts: 1

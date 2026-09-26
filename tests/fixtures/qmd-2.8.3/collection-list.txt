@@ -1,0 +1,7 @@
+Collections (1):
+
+demo (qmd://demo/)
+  Pattern:  **/*.md
+  Files:    1
+  Updated:  0s ago
+

@@ -1,0 +1,6 @@
+
+Configured Contexts
+
+demo
+  / (root)
+    Fixture collection context

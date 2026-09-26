@@ -1,5 +1,6 @@
-import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
+import type { ChildProcessWithoutNullStreams } from "node:child_process";
 import { qmdChildEnv } from "./detect.js";
+import { spawnQmd } from "./spawn-qmd.js";
 
 export type RunOptions = {
   timeoutMs?: number;
@@ -29,10 +30,7 @@ export class QmdRunner {
   async run(argv: string[], options: RunOptions = {}): Promise<RunResult> {
     const started = Date.now();
     return new Promise((resolve, reject) => {
-      const child = spawn(this.qmdBin, argv, {
-        shell: false,
-        env: qmdChildEnv(),
-      });
+      const child = spawnQmd(this.qmdBin, argv, { env: qmdChildEnv() });
       this.active = child;
 
       let stdout = "";

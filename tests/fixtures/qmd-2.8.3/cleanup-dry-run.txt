@@ -1,0 +1,5 @@
+Dry run — no changes made.
+
+Would clear 0 cached API responses
+No orphaned embeddings to remove
+Would compact FTS and vacuum the database

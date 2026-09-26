@@ -1,4 +1,3 @@
-import { spawn } from "node:child_process";
 import { access } from "node:fs/promises";
 import path from "node:path";
 import { constants as fsConstants } from "node:fs";
@@ -6,6 +5,7 @@ import {
   QMD_VERSION_MAX_EXCLUSIVE,
   QMD_VERSION_MIN,
 } from "../../shared/constants.js";
+import { spawnQmd } from "./spawn-qmd.js";
 
 export type QmdDetectResult = {
   qmdBin: string | null;
@@ -18,7 +18,17 @@ const ENV_BIN = "QMD_GUI_QMD_BIN";
 export async function resolveQmdBin(
   explicit?: string,
 ): Promise<string | null> {
-  if (explicit) return await executable(explicit) ? explicit : null;
+  if (explicit) {
+    if (explicit.endsWith(".mjs") || explicit.endsWith(".js")) {
+      try {
+        await access(explicit, fsConstants.R_OK);
+        return explicit;
+      } catch {
+        return null;
+      }
+    }
+    return (await executable(explicit)) ? explicit : null;
+  }
   const fromEnv = process.env[ENV_BIN];
   if (fromEnv && (await executable(fromEnv))) return fromEnv;
 
@@ -55,10 +65,7 @@ export async function detectQmd(explicitBin?: string): Promise<QmdDetectResult> 
 
 async function readVersion(qmdBin: string): Promise<string | null> {
   return new Promise((resolve) => {
-    const child = spawn(qmdBin, ["--version"], {
-      shell: false,
-      env: qmdChildEnv(),
-    });
+    const child = spawnQmd(qmdBin, ["--version"], { env: qmdChildEnv() });
     let out = "";
     child.stdout.on("data", (c) => {
       out += String(c);

@@ -1,0 +1,11 @@
+[
+  {
+    "docid": "#129047",
+    "score": 0.42,
+    "file": "qmd://demo/readme.md",
+    "line": 1,
+    "title": "Hello fixture",
+    "context": "Fixture collection context",
+    "snippet": "@@ -1,2 @@ (0 before, 0 after)\n# Hello fixture\nbody line"
+  }
+]
