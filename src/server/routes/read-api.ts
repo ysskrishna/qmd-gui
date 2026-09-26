@@ -4,6 +4,8 @@ import { QmdService } from "../qmd/service.js";
 import { createCollectionsRouter } from "./collections.js";
 import { createContextRouter } from "./context.js";
 import { createDocsRouter } from "./docs.js";
+import { createFsRouter } from "./fs.js";
+import { createPickerRouter } from "./picker.js";
 import { createStatusRouter } from "./status.js";
 
 export function createQmdUnavailableMiddleware(
@@ -23,6 +25,7 @@ export function createQmdUnavailableMiddleware(
 
 export function createReadApiRouter(
   detected: QmdDetectResult,
+  bindHost: string,
 ): Router {
   const router = Router();
   router.use(createQmdUnavailableMiddleware(detected));
@@ -33,6 +36,8 @@ export function createReadApiRouter(
   router.use("/collections", createCollectionsRouter(service));
   router.use("/docs", createDocsRouter(service));
   router.use("/context", createContextRouter(service));
+  router.use("/pick-folder", createPickerRouter());
+  router.use("/fs", createFsRouter(bindHost));
   return router;
 }
 
