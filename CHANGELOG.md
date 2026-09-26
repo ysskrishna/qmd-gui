@@ -14,3 +14,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Phase 2 read APIs: qmd 2.8.3 output parsers, `fake-qmd` test harness, and `/api/status`, `/collections`, `/docs`, `/context` (503 when `qmd` is missing).
 - Phase 3 web shell: sidebar layout, five page stubs, Activity panel with job SSE, CommandPreview, FirstRun gating, TanStack Query, and light/dark theme.
 - Phase 4 search: mode cards, scoped collections, option gating, live CommandPreview, job-backed results, explain table, and document drawer via `qmd get`.
+- Phase 5 collections and context: collection table with include toggle and row actions, add-collection dialog (native picker, home dir browser, paste path), detail tabs (files, settings with `planSettings` save pipeline, collection context), `PUT /collections/:name/config`, `POST /pick-folder`, `GET /fs/dirs`, and global/scoped context forms.

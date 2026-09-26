@@ -99,7 +99,9 @@ function DocDrawerContent({ target, onClose }: Props) {
             type="button"
             variant="outline"
             size="sm"
-            onClick={() => void navigator.clipboard.writeText(q.data?.uri ?? target)}
+            onClick={() =>
+              void navigator.clipboard.writeText(q.data?.uri ?? target ?? "")
+            }
           >
             Copy path
           </Button>

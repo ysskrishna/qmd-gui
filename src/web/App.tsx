@@ -10,6 +10,7 @@ import {
   fetchSystem,
 } from "@/lib/queries.js";
 import { AgentsPage } from "@/pages/AgentsPage";
+import { CollectionDetailPage } from "@/pages/CollectionDetailPage";
 import { CollectionsPage } from "@/pages/CollectionsPage";
 import { ContextPage } from "@/pages/ContextPage";
 import { FirstRun, resolveFirstRunStep } from "@/pages/FirstRun";
@@ -98,6 +99,7 @@ function AppRoutes() {
             </>
           }
         />
+        <Route path="/collections/:name" element={<CollectionDetailPage />} />
         <Route path="/context" element={<ContextPage />} />
         <Route path="/index" element={<IndexPage />} />
         <Route path="/agents" element={<AgentsPage />} />

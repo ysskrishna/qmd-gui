@@ -16,8 +16,23 @@ export type StatusInfo = {
   sizeLabel: string | null;
 };
 
+export type CollectionRow = {
+  name: string;
+  uri: string;
+  pattern: string;
+  files: number;
+  updatedLabel: string | null;
+  excluded: boolean;
+  config: {
+    path?: unknown;
+    pattern?: unknown;
+    ignore?: unknown;
+    includeByDefault?: unknown;
+  } | null;
+};
+
 export type CollectionsResponse = {
-  collections: Array<{ name: string; excluded: boolean }>;
+  collections: CollectionRow[];
 };
 
 export function fetchSystem() {
