@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { QueryState } from "@/components/QueryState";
 import { apiFetch } from "@/lib/api.js";
@@ -18,14 +18,9 @@ type Props = {
   onClose: () => void;
 };
 
-export function DocDrawer({ target, onClose }: Props) {
+function DocDrawerContent({ target, onClose }: Props) {
   const [fromLine, setFromLine] = useState("");
   const [lineCount, setLineCount] = useState("");
-
-  useEffect(() => {
-    setFromLine("");
-    setLineCount("");
-  }, [target]);
 
   const q = useQuery({
     queryKey: ["doc", target, fromLine, lineCount],
@@ -38,8 +33,6 @@ export function DocDrawer({ target, onClose }: Props) {
     },
     enabled: Boolean(target),
   });
-
-  if (!target) return null;
 
   return (
     <>
@@ -126,4 +119,9 @@ export function DocDrawer({ target, onClose }: Props) {
       </aside>
     </>
   );
+}
+
+export function DocDrawer({ target, onClose }: Props) {
+  if (!target) return null;
+  return <DocDrawerContent key={target} target={target} onClose={onClose} />;
 }
