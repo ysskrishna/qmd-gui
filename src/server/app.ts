@@ -50,10 +50,7 @@ export async function createApp(options: CreateAppOptions): Promise<Express> {
 
   const api = express.Router();
   api.use(express.json({ limit: "1mb" }));
-  api.use(
-    "/system",
-    createSystemRouter(options.qmdBin, qmdService, options.port),
-  );
+  api.use("/system", createSystemRouter(detected, qmdService, options.port));
   api.use(createReadApiRouter(detected, options.host));
   api.use("/jobs", createJobsRouter(jobs));
   app.use("/api", api);

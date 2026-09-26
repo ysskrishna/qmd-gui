@@ -23,6 +23,8 @@ The sidebar shows the resolved `index.yml` path as **Default index**.
 | `QMD_GUI_USER` / `QMD_GUI_PASSWORD` | HTTP basic auth when binding outside loopback. |
 | `QMD_EDITOR_URI` | Optional `editor://` template for “open in editor” in the document drawer. |
 
+qmd-gui reads `PATH` from the process that starts the server, not from an interactive shell. If `qmd` works in Terminal but not in the GUI, find the binary (`command -v qmd` on macOS/Linux, `where.exe qmd` on Windows), set `QMD_GUI_QMD_BIN` or pass `--qmd`, then **restart** qmd-gui.
+
 CLI flags override defaults where supported: `qmd-gui start --port 9000 --host 127.0.0.1 --qmd /path/to/qmd --no-open`.
 
 ## MCP defaults

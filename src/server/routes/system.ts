@@ -1,18 +1,17 @@
 import { Router } from "express";
-import { detectQmd } from "../qmd/detect.js";
+import type { QmdDetectResult } from "../qmd/detect.js";
 import { parseStatus } from "../qmd/parse/status.js";
-import { QmdService } from "../qmd/service.js";
+import type { QmdService } from "../qmd/service.js";
 import { resolveIndexYmlPath } from "../paths.js";
 
 export function createSystemRouter(
-  qmdBinFlag?: string,
+  detected: QmdDetectResult,
   service?: QmdService | null,
   guiPort?: number,
 ): Router {
   const router = Router();
 
   router.get("/", async (_req, res) => {
-    const detected = await detectQmd(qmdBinFlag);
     const configPath = resolveIndexYmlPath();
     let dbPath: string | null = null;
     if (detected.qmdBin && service) {
@@ -30,6 +29,7 @@ export function createSystemRouter(
       configPath,
       dbPath,
       guiPort: guiPort ?? null,
+      platform: process.platform,
     });
   });
 

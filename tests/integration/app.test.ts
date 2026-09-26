@@ -1,3 +1,5 @@
+import { chmod, copyFile, mkdtemp } from "node:fs/promises";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import request from "supertest";
@@ -9,6 +11,12 @@ const fixturesWeb = path.join(
   "..",
   "fixtures",
   "web",
+);
+const fakeQmd = path.join(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "..",
+  "fixtures",
+  "fake-qmd.mjs",
 );
 
 const host = "127.0.0.1";
@@ -38,10 +46,11 @@ describe("createApp", () => {
       host,
       port,
     });
-    await request(app)
+    const res = await request(app)
       .get("/api/system")
       .set("Host", `${host}:${port}`)
       .expect(200);
+    expect(res.body.platform).toBe(process.platform);
   });
 
   it("rejects wrong Host header", async () => {
@@ -54,5 +63,25 @@ describe("createApp", () => {
       .get("/health")
       .set("Host", "evil.example.com")
       .expect(403);
+  });
+
+  it("uses startup detection for /api/system after qmd appears on disk", async () => {
+    const tmp = await mkdtemp(path.join(os.tmpdir(), "qmd-gui-startup-"));
+    const lateBin = path.join(tmp, "late-qmd.mjs");
+    const app = await createApp({
+      webDistDir: fixturesWeb,
+      host,
+      port,
+      qmdBin: lateBin,
+    });
+    await copyFile(fakeQmd, lateBin);
+    await chmod(lateBin, 0o755);
+
+    const res = await request(app)
+      .get("/api/system")
+      .set("Host", `${host}:${port}`)
+      .expect(200);
+
+    expect(res.body.qmdFound).toBe(false);
   });
 });

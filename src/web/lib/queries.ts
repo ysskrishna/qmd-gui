@@ -7,6 +7,7 @@ export type SystemInfo = {
   configPath: string;
   dbPath: string | null;
   guiPort: number | null;
+  platform: NodeJS.Platform;
 };
 
 export type StatusCollectionRow = {

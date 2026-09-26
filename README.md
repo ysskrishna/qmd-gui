@@ -54,7 +54,6 @@ Command previews always match what the server runs (`src/shared/commands.ts`).
 ## Security
 
 - Intended for **local** use on loopback. Binding to `0.0.0.0` requires HTTP basic auth (`QMD_GUI_USER` / `QMD_GUI_PASSWORD`).
-- Every API call needs the session token served in the HTML shell.
 - Wrong `Host` headers are rejected.
 
 ## FAQ

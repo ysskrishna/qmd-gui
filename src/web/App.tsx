@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import { Toaster } from "sonner";
 import { ActivityProvider } from "@/context/activity";
 import { AppLayout } from "@/layouts/AppLayout";
+import { ApiError } from "@/lib/api.js";
 import { isQmdUnavailable } from "@/lib/queries";
 import {
   fetchCollections,
@@ -13,7 +14,11 @@ import { AgentsPage } from "@/pages/AgentsPage";
 import { CollectionDetailPage } from "@/pages/CollectionDetailPage";
 import { CollectionsPage } from "@/pages/CollectionsPage";
 import { ContextPage } from "@/pages/ContextPage";
-import { FirstRun, resolveFirstRunStep } from "@/pages/FirstRun";
+import {
+  FirstRun,
+  resolveFirstRunStep,
+  resolveHardAvailabilityStep,
+} from "@/pages/FirstRun";
 import { IndexPage } from "@/pages/IndexPage";
 import { SearchPage } from "@/pages/SearchPage";
 
@@ -28,30 +33,45 @@ export function App() {
   );
 }
 
+function connectionMessage(error: unknown): string | undefined {
+  if (error instanceof ApiError) return error.message;
+  if (error instanceof Error) return error.message;
+  return undefined;
+}
+
 function AppRoutes() {
-  const systemQ = useQuery({ queryKey: ["system"], queryFn: fetchSystem });
+  const systemQ = useQuery({
+    queryKey: ["system"],
+    queryFn: fetchSystem,
+    retry: 1,
+  });
+  const hardStep = resolveHardAvailabilityStep(systemQ.data, systemQ.isError);
+
   const statusQ = useQuery({
     queryKey: ["status"],
     queryFn: fetchStatus,
-    enabled: systemQ.data?.qmdFound === true,
+    enabled: hardStep === null && systemQ.data?.qmdFound === true,
     retry: (count, err) => !isQmdUnavailable(err) && count < 1,
   });
   const collectionsQ = useQuery({
     queryKey: ["collections"],
     queryFn: fetchCollections,
-    enabled: systemQ.data?.qmdFound === true,
+    enabled: hardStep === null && systemQ.data?.qmdFound === true,
     retry: (count, err) => !isQmdUnavailable(err) && count < 1,
   });
 
-  const step = resolveFirstRunStep(
-    systemQ.data,
-    statusQ.data,
-    collectionsQ.data,
-    Boolean(statusQ.error),
-  );
+  const softStep =
+    hardStep === null
+      ? resolveFirstRunStep(
+          systemQ.data,
+          statusQ.data,
+          collectionsQ.data,
+          Boolean(statusQ.error),
+        )
+      : "ok";
 
   const softGate =
-    step === "no-collections" || step === "needs-embed" ? step : null;
+    softStep === "no-collections" || softStep === "needs-embed" ? softStep : null;
 
   if (systemQ.isLoading) {
     return (
@@ -61,10 +81,6 @@ function AppRoutes() {
     );
   }
 
-  if (step === "missing-qmd" || step === "unsupported") {
-    return <FirstRun step={step} system={systemQ.data} />;
-  }
-
   return (
     <Routes>
       <Route
@@ -72,37 +88,54 @@ function AppRoutes() {
           <AppLayout
             configPath={systemQ.data?.configPath}
             qmdVersion={systemQ.data?.version}
-            pendingCount={statusQ.data?.pendingEmbeddings}
+            pendingCount={
+              hardStep === null ? statusQ.data?.pendingEmbeddings : undefined
+            }
           />
         }
       >
-        <Route index element={<Navigate to="/search" replace />} />
-        <Route
-          path="/search"
-          element={
-            <>
-              {softGate === "needs-embed" && (
-                <FirstRun step="needs-embed" system={systemQ.data} />
-              )}
-              <SearchPage />
-            </>
-          }
-        />
-        <Route
-          path="/collections"
-          element={
-            <>
-              {softGate === "no-collections" && (
-                <FirstRun step="no-collections" system={systemQ.data} />
-              )}
-              <CollectionsPage />
-            </>
-          }
-        />
-        <Route path="/collections/:name" element={<CollectionDetailPage />} />
-        <Route path="/context" element={<ContextPage />} />
-        <Route path="/index" element={<IndexPage />} />
-        <Route path="/agents" element={<AgentsPage />} />
+        {hardStep ? (
+          <Route
+            path="*"
+            element={
+              <FirstRun
+                step={hardStep}
+                system={systemQ.data}
+                connectionMessage={connectionMessage(systemQ.error)}
+              />
+            }
+          />
+        ) : (
+          <>
+            <Route index element={<Navigate to="/search" replace />} />
+            <Route
+              path="/search"
+              element={
+                <>
+                  {softGate === "needs-embed" && (
+                    <FirstRun step="needs-embed" system={systemQ.data} />
+                  )}
+                  <SearchPage />
+                </>
+              }
+            />
+            <Route
+              path="/collections"
+              element={
+                <>
+                  {softGate === "no-collections" && (
+                    <FirstRun step="no-collections" system={systemQ.data} />
+                  )}
+                  <CollectionsPage />
+                </>
+              }
+            />
+            <Route path="/collections/:name" element={<CollectionDetailPage />} />
+            <Route path="/context" element={<ContextPage />} />
+            <Route path="/index" element={<IndexPage />} />
+            <Route path="/agents" element={<AgentsPage />} />
+          </>
+        )}
       </Route>
     </Routes>
   );
