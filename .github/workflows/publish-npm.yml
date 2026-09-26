@@ -1,0 +1,73 @@
+name: Publish npm
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag (must match package.json), e.g. v0.1.0
+        required: true
+        type: string
+
+concurrency:
+  group: publish-npm-${{ github.event.inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  RELEASE_TAG: ${{ github.event.inputs.tag || github.ref_name }}
+
+jobs:
+  publish:
+    name: Validate, test, and publish package
+    runs-on: ubuntu-latest
+    environment: prod
+    timeout-minutes: 15
+    steps:
+      - name: Checkout release tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+          fetch-depth: 0
+
+      - name: Validate release tag
+        uses: ./.github/actions/validate-release
+        with:
+          tag: ${{ env.RELEASE_TAG }}
+          base-branch: main
+
+      - name: Skip if version already on npm
+        id: skip
+        env:
+          TAG: ${{ env.RELEASE_TAG }}
+        run: |
+          set -euo pipefail
+          VERSION="${TAG#v}"
+          if npm view "qmd-gui@${VERSION}" version 2>/dev/null | grep -q "^${VERSION}$"; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "Version ${VERSION} already published; skipping."
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Node quality checks
+        if: steps.skip.outputs.skip != 'true'
+        uses: ./.github/actions/node-quality
+        with:
+          node-version: "22"
+
+      - name: Use Node.js 24 for publish
+        if: steps.skip.outputs.skip != 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          registry-url: https://registry.npmjs.org
+
+      - name: Publish package
+        if: steps.skip.outputs.skip != 'true'
+        run: npm publish --provenance --access public
