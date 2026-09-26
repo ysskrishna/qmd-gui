@@ -12,6 +12,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.join(root, "src/web"),
+      "@shared": path.join(root, "src/shared"),
     },
   },
   build: {

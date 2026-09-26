@@ -25,6 +25,9 @@
 
 :root {
   --radius: 0.625rem;
+  --sidebar: #fafafa;
+  --term: #0a0a0a;
+  --term-fg: #d4d4d4;
   --background: #ffffff;
   --foreground: #0a0a0a;
   --card: #ffffff;
@@ -39,6 +42,8 @@
 }
 
 .dark {
+  --sidebar: #0f0f0f;
+  --term: #000000;
   --background: #0a0a0a;
   --foreground: #fafafa;
   --card: #111111;
