@@ -1,0 +1,6 @@
+QMD Doctor
+
+SQLite: OK
+sqlite-vec: OK
+Models cache: OK
+Embeddings: 1 pending (run qmd embed)

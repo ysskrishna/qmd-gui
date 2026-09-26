@@ -57,6 +57,8 @@ export type SkillInstallOpts = {
   global?: boolean;
   yes?: boolean;
   force?: boolean;
+  /** Project directory used as spawn cwd (non-global installs). */
+  cwd?: string;
 };
 
 export function buildJobArgv(

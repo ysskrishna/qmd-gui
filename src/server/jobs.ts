@@ -21,6 +21,7 @@ export type JobDoneEvent = {
 };
 
 export type JobRecord = JobSummary & {
+  opts: Record<string, unknown>;
   lines: JobLineEvent[];
   emitter: EventEmitter;
   done?: JobDoneEvent;
@@ -36,6 +37,7 @@ export class JobManager {
   private readonly history: string[] = [];
   private writeChain: Promise<void> = Promise.resolve();
   private runningWrite: string | null = null;
+  private cleanupPreviewReady = false;
 
   constructor(private readonly qmdBin: string) {}
 
@@ -58,6 +60,12 @@ export class JobManager {
   }
 
   async enqueue(input: EnqueueInput): Promise<{ jobId: string; argv: string[] }> {
+    if (input.kind === "cleanup" && !this.cleanupPreviewReady) {
+      throw Object.assign(
+        new Error("Run cleanup preview (dry-run) in this session before cleaning up."),
+        { status: 409 },
+      );
+    }
     const argv = buildJobArgv(input.kind, input.opts);
     const id = randomUUID();
     const startedAt = new Date().toISOString();
@@ -66,6 +74,7 @@ export class JobManager {
       id,
       kind: input.kind,
       argv,
+      opts: input.opts,
       startedAt,
       lines: [],
       emitter,
@@ -107,11 +116,19 @@ export class JobManager {
     const timeoutMs = this.timeoutFor(record.kind);
     let result: unknown;
     try {
+      const cwd =
+        record.kind === "skill.install" && record.opts.cwd
+          ? String(record.opts.cwd)
+          : undefined;
       const res = await runner.run(record.argv, {
         timeoutMs,
+        cwd,
         onLine: (line, stream) => this.pushLine(record, { line, stream }),
       });
       record.exitCode = res.exitCode;
+      if (record.kind === "cleanupDry" && res.exitCode === 0) {
+        this.cleanupPreviewReady = true;
+      }
       if (
         (record.kind === "search" ||
           record.kind === "vsearch" ||

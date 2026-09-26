@@ -37,4 +37,31 @@ describe("JobManager", () => {
     expect(readStarted).toBe(true);
     vi.restoreAllMocks();
   });
+
+  it("requires cleanup preview before cleanup", async () => {
+    vi.spyOn(QmdRunner.prototype, "run").mockResolvedValue({
+      exitCode: 0,
+      stdout: "",
+      stderr: "",
+      durationMs: 1,
+    });
+    const jobs = new JobManager("qmd");
+    await expect(jobs.enqueue({ kind: "cleanup", opts: {} })).rejects.toMatchObject({
+      status: 409,
+    });
+    const dry = await jobs.enqueue({ kind: "cleanupDry", opts: {} });
+    await waitForJobRecord(jobs, dry.jobId);
+    const clean = await jobs.enqueue({ kind: "cleanup", opts: {} });
+    expect(clean.jobId).toBeTruthy();
+    vi.restoreAllMocks();
+  });
 });
+
+async function waitForJobRecord(jobs: JobManager, id: string) {
+  for (let i = 0; i < 40; i++) {
+    const rec = jobs.getJob(id);
+    if (rec?.exitCode !== undefined) return rec;
+    await new Promise((r) => setTimeout(r, 25));
+  }
+  throw new Error("timeout");
+}

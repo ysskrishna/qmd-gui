@@ -72,6 +72,16 @@ describe("buildJobArgv", () => {
     ).toEqual(["embed", "-f", "-c", "notes"]);
   });
 
+  it("embed passes timeout and batch size", () => {
+    expect(
+      buildJobArgv("embed", {
+        collection: "demo",
+        timeoutMin: 30,
+        maxDocsPerBatch: 64,
+      }),
+    ).toEqual(["embed", "-c", "demo", "--timeout", "30", "--max-docs-per-batch", "64"]);
+  });
+
   it("mcp start includes http daemon flags", () => {
     expect(buildJobArgv("mcp.start", { port: 8181 })).toEqual([
       "mcp",

@@ -1,3 +1,4 @@
+import { access } from "node:fs/promises";
 import { Router, type Response } from "express";
 import type { JobManager } from "../jobs.js";
 
@@ -15,14 +16,25 @@ export function createJobsRouter(jobs: JobManager): Router {
       return;
     }
     try {
+      const opts = body.opts ?? {};
+      if (body.kind === "skill.install" && opts.cwd !== undefined) {
+        const cwd = String(opts.cwd);
+        try {
+          await access(cwd);
+        } catch {
+          res.status(400).json({ error: "Project folder does not exist." });
+          return;
+        }
+      }
       const { jobId, argv } = await jobs.enqueue({
         kind: body.kind as Parameters<JobManager["enqueue"]>[0]["kind"],
-        opts: body.opts ?? {},
+        opts,
       });
       res.status(202).json({ jobId, argv });
     } catch (err) {
+      const status = (err as { status?: number }).status ?? 400;
       const message = err instanceof Error ? err.message : String(err);
-      res.status(400).json({ error: message });
+      res.status(status).json({ error: message });
     }
   });
 

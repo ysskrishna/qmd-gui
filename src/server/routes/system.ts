@@ -7,6 +7,7 @@ import { resolveIndexYmlPath } from "../paths.js";
 export function createSystemRouter(
   qmdBinFlag?: string,
   service?: QmdService | null,
+  guiPort?: number,
 ): Router {
   const router = Router();
 
@@ -28,6 +29,7 @@ export function createSystemRouter(
       supported: detected.supported,
       configPath,
       dbPath,
+      guiPort: guiPort ?? null,
     });
   });
 

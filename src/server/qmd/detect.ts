@@ -123,7 +123,12 @@ export function qmdChildEnv(): NodeJS.ProcessEnv {
     if (process.env[key] !== undefined) env[key] = process.env[key];
   }
   for (const [key, value] of Object.entries(process.env)) {
-    if (key.startsWith("QMD_") && value !== undefined) env[key] = value;
+    if (
+      (key.startsWith("QMD_") || key.startsWith("FAKE_QMD_")) &&
+      value !== undefined
+    ) {
+      env[key] = value;
+    }
   }
   return env;
 }

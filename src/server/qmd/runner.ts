@@ -4,6 +4,7 @@ import { spawnQmd } from "./spawn-qmd.js";
 
 export type RunOptions = {
   timeoutMs?: number;
+  cwd?: string;
   onLine?: (line: string, stream: "stdout" | "stderr") => void;
 };
 
@@ -30,7 +31,10 @@ export class QmdRunner {
   async run(argv: string[], options: RunOptions = {}): Promise<RunResult> {
     const started = Date.now();
     return new Promise((resolve, reject) => {
-      const child = spawnQmd(this.qmdBin, argv, { env: qmdChildEnv() });
+      const child = spawnQmd(this.qmdBin, argv, {
+        env: qmdChildEnv(),
+        cwd: options.cwd,
+      });
       this.active = child;
 
       let stdout = "";
