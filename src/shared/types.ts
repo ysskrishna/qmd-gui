@@ -32,6 +32,18 @@ export type JobPostBody = {
   opts: Record<string, unknown>;
 };
 
+export type SearchHit = {
+  docid: string;
+  score: number;
+  file: string;
+  line: number;
+  title: string;
+  context: string;
+  snippet: string;
+  snippetLine: number | null;
+  explain?: unknown;
+};
+
 export type JobSummary = {
   id: string;
   kind: JobKind;

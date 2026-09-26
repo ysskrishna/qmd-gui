@@ -20,6 +20,9 @@ export type SearchOpts = {
   candidateLimit?: number;
   noRerank?: boolean;
   explain?: boolean;
+  /** Return whole documents instead of snippets (`--full`). */
+  full?: boolean;
+  /** Show on-disk paths in results (`--full-path`). */
   fullPath?: boolean;
 };
 
@@ -153,7 +156,8 @@ export function buildSearchArgv(
     }
     if (opts.noRerank) args.push("--no-rerank");
   }
-  if (opts.explain) args.push("--explain");
+  if (mode === "query" && opts.explain) args.push("--explain");
+  if (opts.full) args.push("--full");
   if (opts.fullPath) args.push("--full-path");
 
   const queryArg = resolveSearchQueryArg(opts);

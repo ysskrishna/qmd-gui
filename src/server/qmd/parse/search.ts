@@ -1,14 +1,6 @@
-export type SearchHit = {
-  docid: string;
-  score: number;
-  file: string;
-  line: number;
-  title: string;
-  context: string;
-  snippet: string;
-  snippetLine: number | null;
-  explain?: unknown;
-};
+import type { SearchHit } from "../../../shared/types.js";
+
+export type { SearchHit };
 
 const SNIPPET_HUNK_RE = /^@@\s+-(\d+),/;
 

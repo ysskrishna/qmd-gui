@@ -27,7 +27,10 @@ type ActivityContextValue = {
   jobs: ActivityJob[];
   open: boolean;
   setOpen: (open: boolean) => void;
-  runJob: (kind: JobKind, opts: Record<string, unknown>) => Promise<ActivityJob>;
+  runJob: (
+    kind: JobKind,
+    opts: Record<string, unknown>,
+  ) => Promise<ActivityJob & { result?: unknown }>;
 };
 
 const ActivityContext = createContext<ActivityContextValue | null>(null);
@@ -51,24 +54,25 @@ export function ActivityProvider({ children }: { children: ReactNode }) {
     setJobs((prev) => [job, ...prev].slice(0, 50));
     setOpen(true);
 
-    subscribeJobEvents(res.jobId, {
-      onLine: (line) => {
-        setJobs((prev) =>
-          prev.map((j) =>
-            j.id === res.jobId ? { ...j, lines: [...j.lines, line] } : j,
-          ),
-        );
-      },
-      onDone: ({ exitCode }) => {
-        setJobs((prev) =>
-          prev.map((j) =>
-            j.id === res.jobId ? { ...j, running: false, exitCode } : j,
-          ),
-        );
-      },
+    return await new Promise<ActivityJob & { result?: unknown }>((resolve) => {
+      subscribeJobEvents(res.jobId, {
+        onLine: (line) => {
+          setJobs((prev) =>
+            prev.map((j) =>
+              j.id === res.jobId ? { ...j, lines: [...j.lines, line] } : j,
+            ),
+          );
+        },
+        onDone: ({ exitCode, result }) => {
+          setJobs((prev) =>
+            prev.map((j) =>
+              j.id === res.jobId ? { ...j, running: false, exitCode } : j,
+            ),
+          );
+          resolve({ ...job, exitCode, result });
+        },
+      });
     });
-
-    return job;
   }, []);
 
   const value = useMemo(
