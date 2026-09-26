@@ -6,6 +6,10 @@ import { API_TOKEN_HEADER } from "../shared/constants.js";
 import { JobManager } from "./jobs.js";
 import { detectQmd } from "./qmd/detect.js";
 import { createJobsRouter } from "./routes/jobs.js";
+import {
+  createQmdService,
+  createReadApiRouter,
+} from "./routes/read-api.js";
 import { createSystemRouter } from "./routes/system.js";
 import {
   createApiTokenGuard,
@@ -32,6 +36,7 @@ export async function createApp(options: CreateAppOptions): Promise<Express> {
   const detected = await detectQmd(options.qmdBin);
   const qmdBin = detected.qmdBin ?? "qmd";
   const jobs = options.jobManager ?? new JobManager(qmdBin);
+  const qmdService = createQmdService(detected);
 
   const app = express();
   app.disable("x-powered-by");
@@ -49,7 +54,8 @@ export async function createApp(options: CreateAppOptions): Promise<Express> {
   const api = express.Router();
   api.use(createApiTokenGuard(options.apiToken));
   api.use(express.json({ limit: "1mb" }));
-  api.use("/system", createSystemRouter(options.qmdBin));
+  api.use("/system", createSystemRouter(options.qmdBin, qmdService));
+  api.use(createReadApiRouter(detected));
   api.use("/jobs", createJobsRouter(jobs));
   app.use("/api", api);
 
