@@ -1,10 +1,10 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { App } from "../../src/web/App";
+import { CommandPreview } from "../../src/web/components/CommandPreview";
 
-describe("App", () => {
-  it('renders "Hello"', () => {
-    render(<App />);
-    expect(screen.getByRole("heading", { name: "Hello" })).toBeInTheDocument();
+describe("web shell", () => {
+  it("renders command preview", () => {
+    render(<CommandPreview argv={["status"]} />);
+    expect(screen.getByText("qmd status")).toBeInTheDocument();
   });
 });
