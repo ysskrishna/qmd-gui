@@ -71,23 +71,6 @@ qmd works on **collections** (folder + pattern + ignore). Exclude files with ign
 
 Run **Generate embeddings** on the Index page and ensure models are pulled (`qmd pull`). Keyword search does not need embeddings.
 
-## License
-
-MIT © [Y. Siva Sai Krishna](https://github.com/ysskrishna) — see [LICENSE](LICENSE) for details.
-
----
-
-<p align="left">
-  <a href="https://github.com/ysskrishna">Author's GitHub</a> •
-  <a href="https://linkedin.com/in/ysskrishna">Author's LinkedIn</a> •
-  <a href="https://ysskrishna.space">Author's site</a> •
-  <a href="https://github.com/ysskrishna/qmd-gui/issues">Report Issues</a>
-</p>
-
-## Credits
-
-[qmd](https://github.com/tobilu/qmd) is by [Tobi Lütke](https://github.com/tobilu). This project is a separate UI and does not bundle qmd.
-
 ## Resources
 
 - [Configuration and CLI options](docs/configuration.md)
@@ -102,3 +85,21 @@ If you find this project helpful:
 - [Report issues](https://github.com/ysskrishna/qmd-gui/issues)
 - Submit pull requests
 - [Sponsor on GitHub](https://github.com/sponsors/ysskrishna)
+
+
+## Credits
+
+[qmd](https://github.com/tobilu/qmd) is by [Tobi Lütke](https://github.com/tobilu). This project is a separate UI and does not bundle qmd.
+
+## License
+
+MIT © [Y. Siva Sai Krishna](https://github.com/ysskrishna) — see [LICENSE](LICENSE) for details.
+
+---
+
+<p align="left">
+  <a href="https://github.com/ysskrishna">Author's GitHub</a> •
+  <a href="https://linkedin.com/in/ysskrishna">Author's LinkedIn</a> •
+  <a href="https://ysskrishna.space">Author's site</a> •
+  <a href="https://github.com/ysskrishna/qmd-gui/issues">Report Issues</a>
+</p>
