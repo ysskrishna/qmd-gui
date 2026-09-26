@@ -1,5 +1,3 @@
-import { API_TOKEN_HEADER } from "@shared/constants.js";
-
 export class ApiError extends Error {
   constructor(
     message: string,
@@ -11,17 +9,11 @@ export class ApiError extends Error {
   }
 }
 
-export function getApiToken(): string {
-  const el = document.querySelector('meta[name="qmd-gui-token"]');
-  return el?.getAttribute("content") ?? "";
-}
-
 export async function apiFetch<T>(
   path: string,
   init: RequestInit = {},
 ): Promise<T> {
   const headers = new Headers(init.headers);
-  headers.set(API_TOKEN_HEADER, getApiToken());
   if (init.body && !headers.has("Content-Type")) {
     headers.set("Content-Type", "application/json");
   }
@@ -37,9 +29,6 @@ export async function apiFetch<T>(
     }
   }
 
-  if (res.status === 401) {
-    throw new ApiError("Unauthorized — reload the page.", 401, body);
-  }
   if (res.status === 403) {
     throw new ApiError("Forbidden (invalid Host).", 403, body);
   }
@@ -80,7 +69,6 @@ export function subscribeJobEvents(
   jobId: string,
   handlers: SseHandlers,
 ): () => void {
-  const token = getApiToken();
   const url = `/api/jobs/${jobId}/events`;
   let closed = false;
   let retryMs = 500;
@@ -89,7 +77,7 @@ export function subscribeJobEvents(
     while (!closed) {
       try {
         const res = await fetch(url, {
-          headers: { [API_TOKEN_HEADER]: token, Accept: "text/event-stream" },
+          headers: { Accept: "text/event-stream" },
         });
         if (!res.ok || !res.body) {
           throw new ApiError(`SSE failed (${res.status})`, res.status);

@@ -1,4 +1,3 @@
-import { randomBytes } from "node:crypto";
 import { spawn } from "node:child_process";
 import { createServer } from "node:http";
 import path from "node:path";
@@ -47,12 +46,10 @@ export function parseCliArgs(argv: string[]): CliOptions {
 
 export async function startServer(options: CliOptions): Promise<void> {
   assertBindAllowed(options.host);
-  const token = randomBytes(32).toString("hex");
   const rootDir = path.dirname(fileURLToPath(import.meta.url));
   const webDistDir = path.join(rootDir, "..", "web");
   const app = await createApp({
     webDistDir,
-    apiToken: token,
     host: options.host,
     port: options.port,
     qmdBin: options.qmdBin,

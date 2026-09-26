@@ -4,7 +4,6 @@ import request from "supertest";
 import { describe, expect, it } from "vitest";
 import { createApp } from "../../src/server/app.js";
 import { buildSearchArgv } from "../../src/shared/commands.js";
-import { API_TOKEN_HEADER } from "../../src/shared/constants.js";
 
 const fixturesWeb = path.join(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -22,7 +21,6 @@ describe("search job integration", () => {
   it("returns argv matching shared preview builder", async () => {
     const app = await createApp({
       webDistDir: fixturesWeb,
-      apiToken: "t",
       host: "127.0.0.1",
       port: 8765,
       qmdBin: fakeQmd,
@@ -37,7 +35,6 @@ describe("search job integration", () => {
     const post = await request(app)
       .post("/api/jobs")
       .set("Host", "127.0.0.1:8765")
-      .set(API_TOKEN_HEADER, "t")
       .send({
         kind: "search",
         opts: { mode: "search", query: "fixture", n: 2 },

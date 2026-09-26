@@ -3,7 +3,6 @@ import { fileURLToPath } from "node:url";
 import request from "supertest";
 import { describe, expect, it } from "vitest";
 import { createApp } from "../../src/server/app.js";
-import { API_TOKEN_HEADER } from "../../src/shared/constants.js";
 
 const fixturesWeb = path.join(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -22,7 +21,6 @@ describe("fs and pick-folder API", () => {
   it("lists directories under home on loopback bind", async () => {
     const app = await createApp({
       webDistDir: fixturesWeb,
-      apiToken: "t",
       host: "127.0.0.1",
       port: 8765,
       qmdBin: fakeQmd,
@@ -30,7 +28,6 @@ describe("fs and pick-folder API", () => {
     const res = await request(app)
       .get("/api/fs/dirs")
       .set("Host", "127.0.0.1:8765")
-      .set(API_TOKEN_HEADER, "t")
       .expect(200);
     expect(res.body.path).toBeTruthy();
     expect(Array.isArray(res.body.dirs)).toBe(true);
@@ -43,7 +40,6 @@ describe("fs and pick-folder API", () => {
     process.env.QMD_GUI_PASSWORD = "p";
     const app = await createApp({
       webDistDir: fixturesWeb,
-      apiToken: "t",
       host: "0.0.0.0",
       port: 8765,
       qmdBin: fakeQmd,
@@ -52,7 +48,6 @@ describe("fs and pick-folder API", () => {
       .get("/api/fs/dirs")
       .set("Host", "0.0.0.0:8765")
       .auth("u", "p")
-      .set(API_TOKEN_HEADER, "t")
       .expect(403);
     expect(res.body.error).toMatch(/loopback/i);
     process.env.QMD_GUI_USER = prevUser;
@@ -63,15 +58,13 @@ describe("fs and pick-folder API", () => {
     if (process.platform !== "linux") return;
     const app = await createApp({
       webDistDir: fixturesWeb,
-      apiToken: "t",
       host: "127.0.0.1",
       port: 8765,
       qmdBin: fakeQmd,
     });
     const res = await request(app)
       .post("/api/pick-folder")
-      .set("Host", "127.0.0.1:8765")
-      .set(API_TOKEN_HEADER, "t");
+      .set("Host", "127.0.0.1:8765");
     if (res.status === 501) {
       expect(res.body.error).toMatch(/zenity|kdialog/i);
     }

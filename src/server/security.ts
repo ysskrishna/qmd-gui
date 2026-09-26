@@ -2,11 +2,7 @@ import type { RequestHandler } from "express";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import basicAuth from "express-basic-auth";
-import {
-  API_TOKEN_HEADER,
-  RATE_LIMIT_MAX,
-  RATE_LIMIT_WINDOW_MS,
-} from "../shared/constants.js";
+import { RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_MS } from "../shared/constants.js";
 
 const LOOPBACK_HOSTS = new Set(["127.0.0.1", "localhost", "::1", "[::1]"]);
 
@@ -65,18 +61,6 @@ export function createHostGuard(bindHost: string, port: number): RequestHandler 
     const hostHeader = req.headers.host ?? "";
     if (!allowed.has(hostHeader)) {
       res.status(403).json({ error: "Invalid Host header" });
-      return;
-    }
-    next();
-  };
-}
-
-export function createApiTokenGuard(token: string): RequestHandler {
-  return (req, res, next) => {
-    const header = req.headers[API_TOKEN_HEADER];
-    const value = Array.isArray(header) ? header[0] : header;
-    if (value !== token) {
-      res.status(401).json({ error: "Missing or invalid API token" });
       return;
     }
     next();

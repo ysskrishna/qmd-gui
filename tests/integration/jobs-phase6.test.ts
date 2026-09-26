@@ -4,7 +4,6 @@ import { fileURLToPath } from "node:url";
 import request from "supertest";
 import { afterEach, describe, expect, it } from "vitest";
 import { createApp } from "../../src/server/app.js";
-import { API_TOKEN_HEADER } from "../../src/shared/constants.js";
 
 const fixturesWeb = path.join(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -26,12 +25,10 @@ const tmpRoot = path.join(
 
 const host = "127.0.0.1";
 const port = 8765;
-const token = "test-token";
 
 function headers() {
   return {
     Host: `${host}:${port}`,
-    [API_TOKEN_HEADER]: token,
   };
 }
 
@@ -58,7 +55,6 @@ describe("Phase 6 jobs", () => {
   it("rejects cleanup without preview in session", async () => {
     const app = await createApp({
       webDistDir: fixturesWeb,
-      apiToken: token,
       host,
       port,
       qmdBin: fakeQmd,
@@ -73,7 +69,6 @@ describe("Phase 6 jobs", () => {
   it("allows cleanup after successful dry-run", async () => {
     const app = await createApp({
       webDistDir: fixturesWeb,
-      apiToken: token,
       host,
       port,
       qmdBin: fakeQmd,
@@ -98,7 +93,6 @@ describe("Phase 6 jobs", () => {
     process.env.FAKE_QMD_STATE = path.join(tmpRoot, "state.json");
     const app = await createApp({
       webDistDir: fixturesWeb,
-      apiToken: token,
       host,
       port,
       qmdBin: fakeQmd,
@@ -122,7 +116,6 @@ describe("Phase 6 jobs", () => {
 
     const app = await createApp({
       webDistDir: fixturesWeb,
-      apiToken: token,
       host,
       port,
       qmdBin: fakeQmd,

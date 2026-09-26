@@ -3,7 +3,6 @@ import { fileURLToPath } from "node:url";
 import request from "supertest";
 import { describe, expect, it } from "vitest";
 import { createApp } from "../../src/server/app.js";
-import { API_TOKEN_HEADER } from "../../src/shared/constants.js";
 
 const fixturesWeb = path.join(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -19,7 +18,6 @@ describe("createApp", () => {
   it("serves health and SPA shell with valid Host", async () => {
     const app = await createApp({
       webDistDir: fixturesWeb,
-      apiToken: "test-token",
       host,
       port,
     });
@@ -34,28 +32,21 @@ describe("createApp", () => {
     expect(html.text).toContain("Hello fixture");
   });
 
-  it("rejects API without token", async () => {
+  it("serves API system without auth header", async () => {
     const app = await createApp({
       webDistDir: fixturesWeb,
-      apiToken: "secret",
       host,
       port,
     });
     await request(app)
       .get("/api/system")
       .set("Host", `${host}:${port}`)
-      .expect(401);
-    await request(app)
-      .get("/api/system")
-      .set("Host", `${host}:${port}`)
-      .set(API_TOKEN_HEADER, "secret")
       .expect(200);
   });
 
   it("rejects wrong Host header", async () => {
     const app = await createApp({
       webDistDir: fixturesWeb,
-      apiToken: "t",
       host,
       port,
     });

@@ -8,7 +8,6 @@ import request from "supertest";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createApp } from "../../src/server/app.js";
 import { detectQmd } from "../../src/server/qmd/detect.js";
-import { API_TOKEN_HEADER } from "../../src/shared/constants.js";
 
 const execFileAsync = promisify(execFile);
 const fixturesWeb = path.join(
@@ -20,7 +19,6 @@ const fixturesWeb = path.join(
 
 const host = "127.0.0.1";
 const port = 8770;
-const token = "real-smoke-token";
 
 async function waitForJob(
   app: Awaited<ReturnType<typeof createApp>>,
@@ -29,8 +27,7 @@ async function waitForJob(
   for (let i = 0; i < 120; i++) {
     const res = await request(app)
       .get("/api/jobs")
-      .set("Host", `${host}:${port}`)
-      .set(API_TOKEN_HEADER, token);
+      .set("Host", `${host}:${port}`);
     const job = res.body.jobs?.find((j: { id: string }) => j.id === jobId);
     if (job?.exitCode !== undefined) return job;
     await new Promise((r) => setTimeout(r, 250));
@@ -79,7 +76,6 @@ describe("real qmd @real", () => {
     process.env.QMD_CONFIG_DIR = configDir;
     app = await createApp({
       webDistDir: fixturesWeb,
-      apiToken: token,
       host,
       port,
       qmdBin,
@@ -102,7 +98,6 @@ describe("real qmd @real", () => {
 
     const headers = {
       Host: `${host}:${port}`,
-      [API_TOKEN_HEADER]: token,
     };
 
     const status = await request(app).get("/api/status").set(headers).expect(200);

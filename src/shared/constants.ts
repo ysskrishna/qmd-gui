@@ -15,7 +15,5 @@ export const JOB_HISTORY_MAX = 50;
 export const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
 export const RATE_LIMIT_MAX = 600;
 
-export const API_TOKEN_HEADER = "x-qmd-gui-token";
-
 export const PID_FILE_NAME = "server.pid";
 export const CACHE_DIR_NAME = "qmd-gui";

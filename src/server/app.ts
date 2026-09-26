@@ -2,7 +2,6 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import express, { type Express } from "express";
-import { API_TOKEN_HEADER } from "../shared/constants.js";
 import { JobManager } from "./jobs.js";
 import { detectQmd } from "./qmd/detect.js";
 import { createJobsRouter } from "./routes/jobs.js";
@@ -12,7 +11,6 @@ import {
 } from "./routes/read-api.js";
 import { createSystemRouter } from "./routes/system.js";
 import {
-  createApiTokenGuard,
   createBasicAuthIfConfigured,
   createHelmetMiddleware,
   createHostGuard,
@@ -23,7 +21,6 @@ const rootDir = path.dirname(fileURLToPath(import.meta.url));
 
 export type CreateAppOptions = {
   webDistDir?: string;
-  apiToken: string;
   host: string;
   port: number;
   qmdBin?: string;
@@ -52,7 +49,6 @@ export async function createApp(options: CreateAppOptions): Promise<Express> {
   });
 
   const api = express.Router();
-  api.use(createApiTokenGuard(options.apiToken));
   api.use(express.json({ limit: "1mb" }));
   api.use(
     "/system",
@@ -62,7 +58,7 @@ export async function createApp(options: CreateAppOptions): Promise<Express> {
   api.use("/jobs", createJobsRouter(jobs));
   app.use("/api", api);
 
-  const indexHtml = await loadIndexHtml(webDistDir, options.apiToken);
+  const indexHtml = await loadIndexHtml(webDistDir);
   app.use(express.static(webDistDir, { index: false }));
 
   app.get("/{*path}", (_req, res) => {
@@ -72,16 +68,7 @@ export async function createApp(options: CreateAppOptions): Promise<Express> {
   return app;
 }
 
-async function loadIndexHtml(webDistDir: string, token: string): Promise<string> {
+async function loadIndexHtml(webDistDir: string): Promise<string> {
   const file = path.join(webDistDir, "index.html");
-  let html = await readFile(file, "utf8");
-  if (html.includes('name="qmd-gui-token"')) {
-    html = html.replace(
-      /(<meta\s+name="qmd-gui-token"\s+content=")([^"]*)(")/,
-      `$1${token}$3`,
-    );
-  }
-  return html;
+  return readFile(file, "utf8");
 }
-
-export { API_TOKEN_HEADER };

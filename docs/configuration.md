@@ -34,9 +34,9 @@ If MCP and GUI share the same port, the UI warns you before starting the server.
 
 ## Security model
 
-- The API requires the per-session token injected into `index.html` (`x-qmd-gui-token`).
 - Requests must use a valid `Host` header matching the bind address and port.
-- There is no CORS for cross-origin browser access; use loopback or basic auth on LAN binds.
+- Default bind is loopback only. Non-loopback binds require `QMD_GUI_USER` and `QMD_GUI_PASSWORD` (basic auth).
+- There is no CORS for cross-origin browser access.
 - `collection update-cmd` runs arbitrary shell in the collection folder — only use on machines you trust.
 
 ## FAQ
