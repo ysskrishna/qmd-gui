@@ -1,0 +1,5 @@
+# Used by Playwright e2e (QMD_CONFIG_DIR points here).
+collections:
+  demo:
+    path: /tmp/qmd-gui-e2e-demo
+    pattern: "**/*"

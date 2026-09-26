@@ -17,6 +17,7 @@ export default defineConfig({
     setupFiles: ["tests/setup.ts"],
     environment: "node",
     include: ["tests/**/*.test.ts", "tests/**/*.test.tsx"],
+    exclude: ["tests/smoke/**", "node_modules/**"],
     environmentMatchGlobs: [["tests/**/*.test.tsx", "jsdom"]],
     testTimeout: 15_000,
     fileParallelism: false,

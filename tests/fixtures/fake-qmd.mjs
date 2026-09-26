@@ -56,6 +56,14 @@ if (argv[0] === "status") {
 
 if (argv[0] === "collection" && argv[1] === "list") outFile("collection-list.txt");
 else if (argv[0] === "collection" && argv[1] === "show") outFile("collection-show-demo.txt");
+else if (argv[0] === "collection" && argv[1] === "add") exitOk();
+else if (argv[0] === "collection" && argv[1] === "remove") exitOk();
+else if (argv[0] === "collection" && argv[1] === "rename") exitOk();
+else if (argv[0] === "collection" && (argv[1] === "include" || argv[1] === "exclude"))
+  exitOk();
+else if (argv[0] === "collection" && argv[1] === "update-cmd") exitOk();
+else if (argv[0] === "context" && argv[1] === "add") exitOk();
+else if (argv[0] === "context" && argv[1] === "rm") exitOk();
 else if (argv[0] === "context" && argv[1] === "list") outFile("context-list.txt");
 else if (argv[0] === "ls" && argv.length === 1) outFile("ls-root.txt");
 else if (argv[0] === "ls") outFile("ls-demo.txt");
