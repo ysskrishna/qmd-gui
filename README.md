@@ -51,28 +51,6 @@ qmd-gui stop
 
 Command previews always match what the server runs (`src/shared/commands.ts`).
 
-## Configuration
-
-See **[docs/configuration.md](docs/configuration.md)** for config paths, environment variables, MCP ports, and security notes.
-
-## Development
-
-```bash
-git clone https://github.com/ysskrishna/qmd-gui.git
-cd qmd-gui
-npm ci
-npm run build
-npm start
-```
-
-| Script | Description |
-| --- | --- |
-| `npm run dev` | Vite + API server with watch |
-| `npm test` | Unit and integration tests (Vitest) |
-| `npm run test:e2e` | Playwright (Chromium) against built app + fake-qmd |
-| `npm run test:smoke` | Real `qmd` 2.8.x API smoke (CI / local) |
-| `npm run lint` / `typecheck` / `build` | Quality gates |
-
 ## Security
 
 - Intended for **local** use on loopback. Binding to `0.0.0.0` requires HTTP basic auth (`QMD_GUI_USER` / `QMD_GUI_PASSWORD`).
@@ -95,4 +73,32 @@ Run **Generate embeddings** on the Index page and ensure models are pulled (`qmd
 
 ## License
 
-MIT — see [LICENSE](LICENSE). **qmd** remains a separate install under its own license.
+MIT © [Y. Siva Sai Krishna](https://github.com/ysskrishna) — see [LICENSE](LICENSE) for details.
+
+---
+
+<p align="left">
+  <a href="https://github.com/ysskrishna">Author's GitHub</a> •
+  <a href="https://linkedin.com/in/ysskrishna">Author's LinkedIn</a> •
+  <a href="https://ysskrishna.space">Author's site</a> •
+  <a href="https://github.com/ysskrishna/qmd-gui/issues">Report Issues</a>
+</p>
+
+## Credits
+
+[qmd](https://github.com/tobilu/qmd) is by [Tobi Lütke](https://github.com/tobilu). This project is a separate UI and does not bundle qmd.
+
+## Resources
+
+- [Configuration and CLI options](docs/configuration.md)
+- [Development](docs/development.md)
+- [Release history (CHANGELOG)](CHANGELOG.md)
+
+## Support
+
+If you find this project helpful:
+
+- Star the [repository](https://github.com/ysskrishna/qmd-gui)
+- [Report issues](https://github.com/ysskrishna/qmd-gui/issues)
+- Submit pull requests
+- [Sponsor on GitHub](https://github.com/sponsors/ysskrishna)

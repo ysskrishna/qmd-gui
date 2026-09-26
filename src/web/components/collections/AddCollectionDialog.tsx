@@ -17,6 +17,17 @@ type Props = {
 };
 
 export function AddCollectionDialog({ open, onClose, onAdded }: Props) {
+  if (!open) return null;
+  return <AddCollectionForm onClose={onClose} onAdded={onAdded} />;
+}
+
+function AddCollectionForm({
+  onClose,
+  onAdded,
+}: {
+  onClose: () => void;
+  onAdded: () => void;
+}) {
   const { runJob } = useActivity();
   const [path, setPath] = useState("");
   const [name, setName] = useState("");
@@ -27,17 +38,7 @@ export function AddCollectionDialog({ open, onClose, onAdded }: Props) {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (!open) return;
-    setPath("");
-    setName("");
-    setMask("**/*.md");
-    setBrowsePath(null);
-    setDirs([]);
-    setBrowseError(null);
-  }, [open]);
-
-  useEffect(() => {
-    if (!open || browsePath === null) return;
+    if (browsePath === null) return;
     void fetchFsDirs(browsePath)
       .then((res) => {
         setDirs(res.dirs);
@@ -47,9 +48,7 @@ export function AddCollectionDialog({ open, onClose, onAdded }: Props) {
         setBrowseError(err instanceof Error ? err.message : "Cannot list folders");
         setDirs([]);
       });
-  }, [open, browsePath]);
-
-  if (!open) return null;
+  }, [browsePath]);
 
   const validated = validateCollectionAddPath(path);
   const resolvedName = name.trim() || (validated.ok ? defaultCollectionName(validated.path) : "");

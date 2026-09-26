@@ -1,6 +1,6 @@
 {
   "name": "qmd-gui",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Local web UI for the qmd CLI — search, collections, and index management",
   "type": "module",
   "scripts": {
@@ -18,7 +18,11 @@
     "test:e2e": "playwright test",
     "test:watch": "vitest",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": "eslint"
   },
   "files": [
     "bin/",
@@ -84,7 +88,9 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
+    "husky": "^9.1.7",
     "jsdom": "^27.2.0",
+    "lint-staged": "^17.6.0",
     "lucide-react": "^0.554.0",
     "prettier": "^3.6.2",
     "supertest": "^7.1.4",
