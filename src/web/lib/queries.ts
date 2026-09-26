@@ -6,14 +6,32 @@ export type SystemInfo = {
   supported: boolean;
   configPath: string;
   dbPath: string | null;
+  guiPort: number | null;
+};
+
+export type StatusCollectionRow = {
+  name: string;
+  uri: string;
+  pattern: string;
+  files: number;
+  updatedLabel: string | null;
+  contextCount: number;
 };
 
 export type StatusInfo = {
   pendingEmbeddings: number;
   totalFiles: number;
+  vectors: number;
   models: { embed?: string; rerank?: string; generate?: string };
   dbPath: string | null;
   sizeLabel: string | null;
+  orphanedVectors: number | null;
+  updatedLabel: string | null;
+  mcpPid: number | null;
+  astActive: boolean;
+  astLanguages: string[];
+  tips: string[];
+  collections: StatusCollectionRow[];
 };
 
 export type CollectionRow = {
