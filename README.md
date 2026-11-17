@@ -5,9 +5,8 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/qmd-gui"><img src="https://img.shields.io/npm/v/qmd-gui.svg?style=flat-square" alt="npm version" /></a>
   <a href="https://github.com/ysskrishna/qmd-gui/actions/workflows/ci.yml"><img src="https://github.com/ysskrishna/qmd-gui/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
-  <a href="https://nodejs.org/"><img src="https://img.shields.io/node/v/qmd-gui.svg?style=flat-square" alt="Node 22+" /></a>
+  <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/node-22%2B-brightgreen?style=flat-square" alt="Node 22+" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/ysskrishna/qmd-gui.svg?style=flat-square" alt="License: MIT" /></a>
   <a href="https://ysskrishna.space"><img src="https://img.shields.io/badge/author-ysskrishna.space-informational?style=flat-square" alt="Author site" /></a>
 </p>
@@ -24,20 +23,25 @@ npm install -g @tobilu/qmd
 
 ## Quick start
 
+`qmd-gui` is not published on npm. Clone this repository and run it locally.
+
 ```bash
-npx qmd-gui
+git clone https://github.com/ysskrishna/qmd-gui.git
+cd qmd-gui
+npm install
+npm start
 ```
 
 Opens **http://127.0.0.1:8765** and starts a local API that shells out to `qmd` for every action.
 
 ```bash
 # Custom port / host / qmd binary
-qmd-gui start --port 9000 --host 127.0.0.1 --qmd ~/.bun/bin/qmd --no-open
+npm start -- --port 9000 --host 127.0.0.1 --qmd ~/.bun/bin/qmd --no-open
 
 # Background + PID file (~/.cache/qmd-gui/server.pid)
-qmd-gui start --detach
-qmd-gui status
-qmd-gui stop
+npm start -- --detach
+node bin/qmd-gui.js status
+node bin/qmd-gui.js stop
 ```
 
 ## What you can do
