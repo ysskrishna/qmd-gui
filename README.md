@@ -1,7 +1,7 @@
 # qmd-gui
 
 <p align="center">
-  <strong>Local web UI for the <a href="https://github.com/tobilu/qmd">qmd</a> CLI</strong> — search markdown collections, edit index settings, manage context, and run maintenance without memorizing every flag.
+  <strong>Local web UI for the <a href="https://github.com/tobi/qmd">qmd</a> CLI</strong> — search markdown collections, edit index settings, manage context, and run maintenance without memorizing every flag.
 </p>
 
 <p align="center">
@@ -9,6 +9,7 @@
   <a href="https://github.com/ysskrishna/qmd-gui/actions/workflows/ci.yml"><img src="https://github.com/ysskrishna/qmd-gui/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
   <a href="https://nodejs.org/"><img src="https://img.shields.io/node/v/qmd-gui.svg?style=flat-square" alt="Node 22+" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/ysskrishna/qmd-gui.svg?style=flat-square" alt="License: MIT" /></a>
+  <a href="https://ysskrishna.space"><img src="https://img.shields.io/badge/author-ysskrishna.space-informational?style=flat-square" alt="Author site" /></a>
 </p>
 
 ## Requirements
@@ -58,17 +59,32 @@ Command previews always match what the server runs (`src/shared/commands.ts`).
 
 ## FAQ
 
-### Why can’t I toggle a single file in/out of the index?
+<a id="why-cant-i-toggle-a-single-file-inout-of-the-index"></a>
+
+<details>
+<summary><b>Why can’t I toggle a single file in/out of the index?</b></summary>
 
 qmd works on **collections** (folder + pattern + ignore). Exclude files with ignore globs or a tighter pattern on the collection **Settings** tab, not a per-file switch.
 
-### Why does settings save say “Conflict”?
+</details>
+
+<a id="why-does-settings-save-say-conflict"></a>
+
+<details>
+<summary><b>Why does settings save say “Conflict”?</b></summary>
 
 `index.yml` changed on disk since the page loaded. Reload and try again; unrelated keys and comments are preserved when the GUI writes YAML.
 
-### Search works but hybrid/vector is empty
+</details>
+
+<a id="search-works-but-hybridvector-is-empty"></a>
+
+<details>
+<summary><b>Search works but hybrid/vector is empty</b></summary>
 
 Run **Generate embeddings** on the Index page and ensure models are pulled (`qmd pull`). Keyword search does not need embeddings.
+
+</details>
 
 ## Resources
 
@@ -76,19 +92,30 @@ Run **Generate embeddings** on the Index page and ensure models are pulled (`qmd
 - [Development](docs/development.md)
 - [Release history (CHANGELOG)](CHANGELOG.md)
 
+## Credits
+
+[qmd](https://github.com/tobi/qmd) is by [Tobi Lütke](https://github.com/tobilu). This project is a separate UI and does not bundle qmd.
+
+## Built and maintained by
+
+qmd-gui is built and maintained by:
+
+| | Name | GitHub | Role |
+|---|------|--------|------|
+| <img src="https://github.com/ysskrishna.png?size=120" width="60" height="60" alt="Y. Siva Sai Krishna"> | **Y. Siva Sai Krishna** | [@ysskrishna](https://github.com/ysskrishna) | Creator |
+
+## Changelog
+
+See [CHANGELOG](CHANGELOG.md) for release history.
+
 ## Support
 
 If you find this project helpful:
 
-- Star the [repository](https://github.com/ysskrishna/qmd-gui)
-- [Report issues](https://github.com/ysskrishna/qmd-gui/issues)
-- Submit pull requests
-- [Sponsor on GitHub](https://github.com/sponsors/ysskrishna)
-
-
-## Credits
-
-[qmd](https://github.com/tobilu/qmd) is by [Tobi Lütke](https://github.com/tobilu). This project is a separate UI and does not bundle qmd.
+- ⭐ Star the repository
+- 🐛 [Report issues](https://github.com/ysskrishna/qmd-gui/issues)
+- 🔀 Submit pull requests
+- 💝 [Sponsor on GitHub](https://github.com/sponsors/ysskrishna)
 
 ## License
 
@@ -100,5 +127,6 @@ MIT © [Y. Siva Sai Krishna](https://github.com/ysskrishna) — see [LICENSE](LI
   <a href="https://github.com/ysskrishna">Author's GitHub</a> •
   <a href="https://linkedin.com/in/ysskrishna">Author's LinkedIn</a> •
   <a href="https://ysskrishna.space">Author's site</a> •
+  <a href="https://github.com/ysskrishna/qmd-gui">repository</a> •
   <a href="https://github.com/ysskrishna/qmd-gui/issues">Report Issues</a>
 </p>
